@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Division;
 use App\Http\Controllers\Controller;
+use App\Union;
+use App\UpaZilla;
+use App\Zilla;
 use App\Zone;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -124,5 +128,31 @@ class ZoneController extends Controller
             return response()->json(db_error($ex), config('naz.query_error_status_code'));
         }
         return response()->json(config('naz.del'));
+    }
+
+    public function findLocation($location="division", $id=null){
+
+        try{
+
+            switch ($location) {
+                case "unions":
+                    $table = Union::select('id as value', 'name as label')->where('upa_zillas_id', $id)->get();
+                    break;
+                case "upa_zillas":
+                    $table = UpaZilla::select('id as value', 'name as label')->where('zillas_id', $id)->get();
+                    break;
+                case "zillas":
+                    $table = Zilla::select('id as value', 'name as label')->where('divisions_id', $id)->get();
+                    break;
+                default:
+                    $table = Division::select('id as value', 'name as label')->get();
+            }
+
+        }catch (QueryException $ex) {
+            return response()->json(db_error($ex), config('naz.query_error_status_code'));
+        }
+
+        return response()->json(db_result($table));
+
     }
 }

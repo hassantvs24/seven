@@ -56,6 +56,8 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::resource('/settings/zilla', 'Settings\ZillaController');
     Route::resource('/settings/upazilla', 'Settings\UpaZillaController');
     Route::resource('/settings/union', 'Settings\UnionController');
+
+    Route::get('/settings/zone/find/{location?}/{id?}', 'Settings\ZoneController@findLocation');
     Route::resource('/settings/zone', 'Settings\ZoneController');
 
 
